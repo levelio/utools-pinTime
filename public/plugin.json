@@ -1,0 +1,19 @@
+{
+  "$schema": "../utools.schema.json",
+  "main": "index.html",
+  "preload": "preload/index.js",
+  "logo": "logo.png",
+  "development": {
+    "main": "http://localhost:5173"
+  },
+  "features": [
+    {
+      "code": "time",
+      "explain": "显示当前时间",
+      "cmds": [
+        "pintime",
+        "time"
+      ]
+    }
+  ]
+}
