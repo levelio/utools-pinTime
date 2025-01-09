@@ -1,10 +1,14 @@
-import { ListItem } from './components/list-item'
+import { ListItem, ListItemType } from './components/list-item'
 
 import { usePageReducer } from './hooks/usePageReducer'
 import './app.css'
 
 export function App() {
   const { state, dispatch } = usePageReducer()
+
+  const handleOpenWindow = (type: ListItemType) => () => {
+    dispatch({ type: 'OPEN_WINDOW', payload: { type } })
+  }
 
   return (
     <div className="p-4">
@@ -18,18 +22,17 @@ export function App() {
           <span className="text-violet-4">m</span>
           <span className="text-violet-3">e</span>
         </h1>
-        <div className="">
-          <button className="bg-violet-5 text-white px-4 py-2 rounded-md">新建时钟</button>
-          <button className="bg-violet-5 text-white px-4 py-2 rounded-md mx-2">新建正计时</button>
-          <button className="bg-violet-5 text-white px-4 py-2 rounded-md">新建倒计时</button>
+        <div className="flex justify-end">
+          <button className="bg-violet-5 text-white px-4 py-2 rounded-md" onClick={() => dispatch({ type: 'IGNORE_MOUSE_EVENTS' })}>切换鼠标穿透</button>
+          <button className="bg-violet-5 text-white px-4 py-2 rounded-md ml-2" onClick={() => dispatch({ type: 'CLOSE_ALL_WINDOW' })}>关闭所有窗口</button>
         </div>
       </div>
+
       <main>
-        <ListItem type="countdown-" options={{ title: '倒计时', countdown: 20, fontSize: 20, fontColor: '#00ff00' }} enable={true} />
-        <ListItem type="countdown+" options={{ title: '正计时', fontSize: 30, fontColor: '#0000ff' }} enable={false} />
-        <ListItem type="date" options={{ title: '时钟', fontSize: 40, fontColor: '#ff0000' }} enable={true} />
+        <ListItem type={ListItemType.date} options={state[ListItemType.date]} openWindow={handleOpenWindow(ListItemType.date)} />
+        <ListItem type={ListItemType.countdown} options={state[ListItemType.countdown]} openWindow={handleOpenWindow(ListItemType.countdown)} />
+        <ListItem type={ListItemType.timing} options={state[ListItemType.timing]} openWindow={handleOpenWindow(ListItemType.timing)} />
       </main>
     </div>
-
   )
 }

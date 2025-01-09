@@ -23,12 +23,12 @@ const timeWindownOptions = {
 }
 
 window.services = {
-  showTimeWindow() {
-    const fontSize = 24
-    const width = fontSize * 5
+  openTimeWindow(type, opt) {
+    const fontSize = opt.fontSize || 24
+    const width = fontSize * 6
     const height = fontSize * 2
     const timeWin = window.utools.createBrowserWindow(
-      'time-window.html',
+      getWindowUrl(type, opt),
       { ...timeWindownOptions, width, height },
       () => {
         timeWin.setAlwaysOnTop(true, 'screen-saver')
@@ -36,7 +36,6 @@ window.services = {
         window.utools.isMacOS() && timeWin.setLevel(2147483647)
       },
     )
-
     const webContentsId = timeWin.webContents.id
     const bridgeKey = {}
     idBridge.set(webContentsId, bridgeKey)
@@ -44,24 +43,63 @@ window.services = {
     return webContentsId
   },
   changeStyle(id, key, value) {
-    console.log('change style:', id, key, value)
     if (key === 'font-size') {
       this.changeFontSize(id, value)
     }
     ipcRenderer.sendTo(id, `change-style-${key}`, value)
   },
   changeFontSize(id, value) {
-    const bridge = idBridge.get(id)
-    const win = winMap.get(bridge)
+    const win = getWindow(id)
     if (win) {
       win.setSize(value * 5, value * 2)
     }
   },
   changeIgnoreMouseEvents(id, value) {
-    const bridge = idBridge.get(id)
-    const win = winMap.get(bridge)
+    const win = getWindow(id)
     if (win) {
       win.setIgnoreMouseEvents(value)
     }
   },
+  changeIgnoreAllWindowMouseEvents(value) {
+    const bridgeKeys = idBridge.values()
+    for (const bridgeKey of bridgeKeys) {
+      const win = winMap.get(bridgeKey)
+      if (win && !win.isDestroyed()) {
+        win.setIgnoreMouseEvents(value)
+      }
+    }
+  },
+  closeWindow(id) {
+    const win = getWindow(id)
+    if (win) {
+      win.close()
+    }
+  },
+  closeAllWindows() {
+    const bridgeKeys = idBridge.values()
+    for (const bridgeKey of bridgeKeys) {
+      const win = winMap.get(bridgeKey)
+      if (win && !win.isDestroyed()) {
+        win.close()
+      }
+    }
+  },
+}
+
+function getWindowUrl(type, opt) {
+  const color = encodeURIComponent(opt.fontColor || 'red')
+  const WINDOW_URL_MAP = {
+    timing: `timing.html?c=${color}`,
+    countdown: `countdown.html?c=${color}&v=${opt.countdown}`,
+    date: `date.html?c=${color}`,
+  }
+  return WINDOW_URL_MAP[type]
+}
+
+function getWindow(id) {
+  const win = winMap.get(idBridge.get(id))
+  if (win && !win.isDestroyed()) {
+    return win
+  }
+  return null
 }
