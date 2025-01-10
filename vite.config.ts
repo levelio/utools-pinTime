@@ -8,12 +8,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'index.html',
-        preload: 'src/preload/index.ts',
       },
       output: {
-        entryFileNames: (chunkInfo) => {
-          return chunkInfo.name === 'preload' ? 'preload/index.js' : '[name].js'
-        },
         format: 'commonjs',
         preserveModules: false,
       },
