@@ -41,7 +41,9 @@
     const root = document.getElementById('root')
     const urlParams = new URLSearchParams(window.location.search)
     const color = urlParams.get('c') || 'red'
+    const fontSize = urlParams.get('s') || '24px'
     root.style.color = color
+    root.style.fontSize = fontSize
     const minutesValue = parseInt(urlParams.get('v')) || 25
     const initDate = new Date().getTime()
     const totalSeconds = initDate + minutesValue * 60 * 1000 + 1000;

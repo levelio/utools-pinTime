@@ -30,7 +30,10 @@
       const root = document.getElementById('root')
       const urlParams = new URLSearchParams(window.location.search)
       const color = urlParams.get('c') || 'red'
+      const fontSize = urlParams.get('f') || '24px'
+
       root.style.color = color
+      root.style.fontSize = fontSize
       const initDate = new Date().getTime();
       root.innerText = '00:00:00'
 

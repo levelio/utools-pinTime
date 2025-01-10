@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron')
 
 console.log('time-window.js loaded')
 
-ipcRenderer.on('change-style-color', (_event, color) => {
+ipcRenderer.on('change-style-font-color', (_event, color) => {
   document.querySelector('#root').style.color = color
 })
 

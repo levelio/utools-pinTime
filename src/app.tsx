@@ -1,5 +1,7 @@
-import { ListItem, ListItemType } from './components/list-item'
+import type { WindowStyle } from './hooks/usePageReducer'
 
+import type { ListItemType } from './types'
+import { ListItem } from './components/list-item'
 import { usePageReducer } from './hooks/usePageReducer'
 import './app.css'
 
@@ -8,6 +10,14 @@ export function App() {
 
   const handleOpenWindow = (type: ListItemType) => () => {
     dispatch({ type: 'OPEN_WINDOW', payload: { type } })
+  }
+
+  const closeWindow = (type: ListItemType) => () => {
+    dispatch({ type: 'CLOSE_WINDOW', payload: { type } })
+  }
+
+  const handlerOnStyleChange = (type: ListItemType, options: Partial<WindowStyle>) => {
+    dispatch({ type: 'CHANGE_WINDOW_CONFIG', payload: { type, options } })
   }
 
   return (
@@ -23,15 +33,17 @@ export function App() {
           <span className="text-violet-3">e</span>
         </h1>
         <div className="flex justify-end">
-          <button className="bg-violet-5 text-white px-4 py-2 rounded-md" onClick={() => dispatch({ type: 'IGNORE_MOUSE_EVENTS' })}>切换鼠标穿透</button>
+          <button className="bg-violet-5 text-white px-4 py-2 rounded-md" onClick={() => dispatch({ type: 'IGNORE_MOUSE_EVENTS' })}>{state.ignoreMouseEvents ? '关闭当前窗口鼠标事件' : '开启当前窗口鼠标事件'}</button>
           <button className="bg-violet-5 text-white px-4 py-2 rounded-md ml-2" onClick={() => dispatch({ type: 'CLOSE_ALL_WINDOW' })}>关闭所有窗口</button>
         </div>
       </div>
 
       <main>
-        <ListItem type={ListItemType.date} options={state[ListItemType.date]} openWindow={handleOpenWindow(ListItemType.date)} />
-        <ListItem type={ListItemType.countdown} options={state[ListItemType.countdown]} openWindow={handleOpenWindow(ListItemType.countdown)} />
-        <ListItem type={ListItemType.timing} options={state[ListItemType.timing]} openWindow={handleOpenWindow(ListItemType.timing)} />
+        {
+          state.windowList.map(type => (
+            <ListItem key={type} type={type} options={state[type]} openWindow={handleOpenWindow(type)} onConfigChange={handlerOnStyleChange} closeWindow={closeWindow(type)} />
+          ))
+        }
       </main>
     </div>
   )

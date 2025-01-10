@@ -88,10 +88,11 @@ window.services = {
 
 function getWindowUrl(type, opt) {
   const color = encodeURIComponent(opt.fontColor || 'red')
+  const size = `${opt.fontSize || 24}px`
   const WINDOW_URL_MAP = {
-    timing: `timing.html?c=${color}`,
-    countdown: `countdown.html?c=${color}&v=${opt.countdown}`,
-    date: `date.html?c=${color}`,
+    timing: `timing.html?c=${color}&s=${size}`,
+    countdown: `countdown.html?c=${color}&v=${opt.countdown}&s=${size}`,
+    date: `date.html?c=${color}&s=${size}`,
   }
   return WINDOW_URL_MAP[type]
 }
