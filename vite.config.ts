@@ -4,17 +4,14 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [preact(), UnoCSS()],
+  base: './',
   build: {
     rollupOptions: {
       input: {
         main: 'index.html',
       },
-      output: {
-        format: 'commonjs',
-        preserveModules: false,
-      },
     },
-    minify: false,
+    minify: true,
     sourcemap: false,
   },
 })
