@@ -11,8 +11,9 @@
       "code": "time",
       "explain": "显示当前时间",
       "cmds": [
-        "pintime",
-        "time"
+        "pin",
+        "time",
+        "pintime"
       ]
     }
   ]
